@@ -78,24 +78,43 @@ class TransformerBlock(nn.Module):
         return out
 
 class Attention(nn.Module):
-    def __init__(self, dim, n_heads):
+    def __init__(self, dim, n_heads, kv_heads=2):
         super().__init__()
+        assert dim % n_heads == 0, "dim must be divisible by n_heads"
+        assert n_heads % kv_heads == 0, "n_heads must be divisible by kv_heads"
         self.n_heads = n_heads
+        self.kv_heads = kv_heads
         self.head_dim = dim // n_heads
-        self.wq = nn.Linear(dim, self.n_heads * self.head_dim, bias=False)
-        self.wk = nn.Linear(dim, self.n_heads * self.head_dim, bias=False)
-        self.wv = nn.Linear(dim, self.n_heads * self.head_dim, bias=False)
-        self.wo = nn.Linear(self.n_heads * self.head_dim, dim, bias=False)
+        self.n_rep = n_heads // kv_heads
+        self.wq = nn.Linear(dim, n_heads * self.head_dim, bias=True)
+        self.wk = nn.Linear(dim, kv_heads * self.head_dim, bias=True)
+        self.wv = nn.Linear(dim, kv_heads * self.head_dim, bias=True)
+        self.wo = nn.Linear(n_heads * self.head_dim, dim, bias=False)
+    def repeat_kv(self, x):
+        B, L, kv_h, D = x.shape
+        if self.n_rep == 1:
+            return x
+        return (
+            x.unsqueeze(3)
+             .expand(B, L, kv_h, self.n_rep, D)
+             .reshape(B, L, kv_h * self.n_rep, D)
+        )
 
     def forward(self, x):
-        batch_size, _, _ = x.shape
-        xq, xk, xv = self.wq(x), self.wk(x), self.wv(x)
-        xq = xq.view(batch_size, -1, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
-        xk = xk.view(batch_size, -1, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
-        xv = xv.view(batch_size, -1, self.n_heads, self.head_dim).permute(0, 2, 1, 3)
-        output = F.scaled_dot_product_attention(xq, xk, xv).permute(0, 2, 1, 3)
-        output = output.flatten(-2)
-        return self.wo(output)
+        B, L, _ = x.shape
+        q = self.wq(x).view(B, L, self.n_heads, self.head_dim)
+        k = self.wk(x).view(B, L, self.kv_heads, self.head_dim)
+        v = self.wv(x).view(B, L, self.kv_heads, self.head_dim)
+        k = self.repeat_kv(k)
+        v = self.repeat_kv(v)
+        q = q.permute(0, 2, 1, 3)  # [B, Hq, L, D]
+        k = k.permute(0, 2, 1, 3)  # [B, Hq, L, D]
+        v = v.permute(0, 2, 1, 3)  # [B, Hq, L, D]
+        out = F.scaled_dot_product_attention(
+            q, k, v, dropout_p=0.0, is_causal=False
+        )
+        out = out.permute(0, 2, 1, 3).contiguous().view(B, L, -1)
+        return self.wo(out)
 
 class AudioClassifier(nn.Module):
     def __init__(self, patch_size=32, dim=256, num_heads=16, n_layers=4, num_classes=2):
