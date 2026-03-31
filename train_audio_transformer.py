@@ -94,7 +94,7 @@ def train(args, model):
     max_metrics = {}
 
     no_improve_count = 0
-    early_stop_patience = 50
+    early_stop_patience = 200
 
     for epoch in range(args.epochs):
         print(f"Epoch: {epoch}")
@@ -178,7 +178,7 @@ def train(args, model):
 
 def test(args, model):
     model.eval()
-    dataloader = DataLoader(args.test_dataset, batch_size=512, num_workers=4, pin_memory=True)
+    dataloader = DataLoader(args.test_dataset, batch_size=256, num_workers=4, pin_memory=True)
 
     all_y_true = []
     all_y_prob = []
@@ -239,7 +239,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=1,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 1:
         train_dataset = AudioDataset(
@@ -262,7 +262,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=2,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 2:
         train_dataset = AudioDataset(
@@ -285,7 +285,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=4,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 3:
         train_dataset = AudioDataset(
@@ -308,7 +308,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=8,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 4:
         train_dataset = AudioDataset(
@@ -331,7 +331,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=10,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     if dataset_id == 5:
         train_dataset = AudioDataset(
@@ -354,7 +354,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=1,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 6:
         train_dataset = AudioDataset(
@@ -377,7 +377,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=2,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 7:
         train_dataset = AudioDataset(
@@ -400,7 +400,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=4,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 8:
         train_dataset = AudioDataset(
@@ -423,7 +423,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=8,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 9:
         train_dataset = AudioDataset(
@@ -446,7 +446,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=10,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     if dataset_id == 10:
         train_dataset = AudioDataset(
@@ -469,7 +469,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=1,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 11:
         train_dataset = AudioDataset(
@@ -492,7 +492,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=2,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 12:
         train_dataset = AudioDataset(
@@ -515,7 +515,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=4,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 13:
         train_dataset = AudioDataset(
@@ -538,7 +538,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=8,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 14:
         train_dataset = AudioDataset(
@@ -561,7 +561,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=10,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 15:
         train_dataset = AudioDataset(
@@ -584,7 +584,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=12,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 16:
         train_dataset = AudioDataset(
@@ -607,7 +607,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=12,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
     elif dataset_id == 17:
         train_dataset = AudioDataset(
@@ -630,7 +630,7 @@ def get_dataset(dataset_id=0, seed=42, n=0):
             duration=12,
             fold_index=n,
             mode='test')
-        return train_dataset, test_dataset, 2, 512, 100
+        return train_dataset, test_dataset, 2, 256, 1000
 
 def get_model(num_classes=2):
     return AudioClassifier(num_classes=num_classes)
@@ -641,11 +641,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
     args.device = "cuda"
-    dataset_id_list = [15, 16, 17]
+    dataset_id_list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
     model_id_dict = {
-        0: [1], 1: [1], 2: [1], 3: [1], 4: [1], 5: [1], 6: [1],
-        7: [1], 8: [1], 9: [1], 10: [1], 11: [1], 12: [1], 13: [1], 14: [1],
-        15: [1], 16:[1], 17:[1]
+        0: [0], 1: [0], 2: [0], 3: [0], 4: [0], 5: [0], 6: [0],
+        7: [0], 8: [0], 9: [0], 10: [0], 11: [0], 12: [0], 13: [0], 14: [0],
+        15: [0], 16:[0], 17:[0]
     }
 
     dataset_id_to_name = {
